@@ -13,6 +13,8 @@ import { remove_item } from "../actions/listActions";
   { id: 4, name: "D item", shortDescription: "This is the item D", count: 6 },
 ]; */
 
+//const mockData = require("../../assets/MOCK_DATA.json");
+
 export class Read extends Component {
   render() {
     return (

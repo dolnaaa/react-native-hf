@@ -1,4 +1,4 @@
-import { View, StyleSheet, TextInput, Button } from "react-native";
+import { View, StyleSheet, TextInput, Button, Alert } from "react-native";
 import React, { Component } from "react";
 
 import { connect } from "react-redux";
@@ -43,6 +43,43 @@ export class Update extends Component {
     this.state.focusedListener();
   }
 
+  createAlert = (title, msg) => Alert.alert(title, msg, [{ text: "OK" }]);
+
+  validation() {
+    // CHECK FOR EMPTY FIELDS
+    if (
+      this.state.fieldName == "" ||
+      this.state.fieldDesc == "" ||
+      this.state.fieldCount == ""
+    ) {
+      this.createAlert("Empty field(s)", "Please fill in every field");
+      return false;
+    }
+
+    // CHECK FOR LETTERS IN COUNT
+    if (!/^\d+$/.test(this.state.fieldCount)) {
+      this.createAlert(
+        "Not valid count format",
+        "Please write only digits(0-9) in the last field"
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  submitPressed() {
+    if (this.validation()) {
+      this.props.dispatchEditItem(this.props.route.params.idToUpdate, {
+        name: this.state.fieldName,
+        shortDescription: this.state.fieldDesc,
+        count: this.state.fieldCount,
+      });
+      this.setState({ fieldName: "", fieldDesc: "", fieldCount: "" });
+      this.props.navigation.navigate("Read");
+    }
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
@@ -74,12 +111,7 @@ export class Update extends Component {
         <Button
           title="Update item"
           onPress={() => {
-            this.props.dispatchEditItem(this.props.route.params.idToUpdate, {
-              name: this.state.fieldName,
-              shortDescription: this.state.fieldDesc,
-              count: this.state.fieldCount,
-            });
-            this.props.navigation.navigate("Read");
+            this.submitPressed();
           }}
         />
       </View>

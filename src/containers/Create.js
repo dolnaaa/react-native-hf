@@ -1,6 +1,9 @@
 import { View, StyleSheet, TextInput, Button } from "react-native";
 import React, { Component } from "react";
 
+import { connect } from "react-redux";
+import { add_item } from "../actions/listActions";
+
 export class Create extends Component {
   constructor(props) {
     super(props);
@@ -39,7 +42,16 @@ export class Create extends Component {
           placeholder="Item count"
           keyboardType="numeric"
         />
-        <Button title="Add item to list" onPress={() => console.log("submit")} />
+        <Button
+          title="Add item to list"
+          onPress={() => {
+            this.props.dispatchAddItem({
+              name: this.state.fieldName,
+              shortDescription: this.state.fieldDesc,
+              count: this.state.fieldCount,
+            });
+          }}
+        />
       </View>
     );
   }
@@ -59,4 +71,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Create;
+const mapStateToProps = (state) => ({});
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatchAddItem: (new_data) => dispatch(add_item(new_data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Create);

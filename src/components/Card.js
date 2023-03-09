@@ -18,13 +18,21 @@ export class Card extends Component {
           {this.props.shortDescription ? this.props.shortDescription : "err"}
         </Text>
         <View style={styles.bottomContainer}>
-          <TouchableOpacity onPress={() => console.log("action")}>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.editAction(this.props.id ? this.props.id : 0)
+            }
+          >
             <Ionicons name="pencil" size={24} color="black" />
           </TouchableOpacity>
           <Text style={styles.count}>
             {this.props.count ? this.props.count : "err"}
           </Text>
-          <TouchableOpacity onPress={() => console.log("action")}>
+          <TouchableOpacity
+            onPress={() =>
+              this.props.removeAction(this.props.id ? this.props.id : 0)
+            }
+          >
             <Ionicons name="trash" size={24} color="black" />
           </TouchableOpacity>
         </View>

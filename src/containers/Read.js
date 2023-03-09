@@ -1,6 +1,10 @@
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, Text } from "react-native";
 import React, { Component } from "react";
+
 import Card from "../components/Card";
+
+import { connect } from "react-redux";
+import { remove_item } from "../actions/listActions";
 
 const dummyData = [
   { id: 1, name: "A item", shortDescription: "This is the item A", count: 3 },
@@ -14,15 +18,25 @@ export class Read extends Component {
     return (
       <View style={styles.mainContainer}>
         <ScrollView style={styles.mainScrollContainer}>
-          {dummyData?.map((item) => (
-            <Card
-              key={item?.id}
-              id={item?.id}
-              name={item?.name}
-              shortDescription={item?.shortDescription}
-              count={item?.count}
-            />
-          ))}
+          {this.props.items ? (
+            this.props.items?.length > 0 ? (
+              this.props.items?.map((item) => (
+                <Card
+                  key={item?.id}
+                  id={item?.id}
+                  name={item?.name}
+                  shortDescription={item?.shortDescription}
+                  count={item?.count}
+                  removeAction={this.props.dispatchRemoveItem}
+                  editAction={(id) => console.log("edit_action")}
+                />
+              ))
+            ) : (
+              <Text>No items yet</Text>
+            )
+          ) : (
+            <Text>Error loading items</Text>
+          )}
         </ScrollView>
       </View>
     );
@@ -39,4 +53,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Read;
+const mapStateToProps = (state) => ({
+  items: state.listReducer.items,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatchRemoveItem: (id) => dispatch(remove_item(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Read);

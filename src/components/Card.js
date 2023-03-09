@@ -26,7 +26,11 @@ export class Card extends Component {
             <Ionicons name="pencil" size={24} color="black" />
           </TouchableOpacity>
           <Text style={styles.count}>
-            {this.props.count ? this.props.count : "err"}
+            {this.props.count
+              ? `${this.props.count} ${
+                  this.props.count > 1 ? "pieces" : "piece"
+                }`
+              : "err"}
           </Text>
           <TouchableOpacity
             onPress={() =>

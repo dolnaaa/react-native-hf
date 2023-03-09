@@ -6,12 +6,12 @@ import Card from "../components/Card";
 import { connect } from "react-redux";
 import { remove_item } from "../actions/listActions";
 
-const dummyData = [
+/* const dummyData = [
   { id: 1, name: "A item", shortDescription: "This is the item A", count: 3 },
   { id: 2, name: "B item", shortDescription: "This is the item B", count: 2 },
   { id: 3, name: "C item", shortDescription: "This is the item C", count: 8 },
   { id: 4, name: "D item", shortDescription: "This is the item D", count: 6 },
-];
+]; */
 
 export class Read extends Component {
   render() {
@@ -28,7 +28,11 @@ export class Read extends Component {
                   shortDescription={item?.shortDescription}
                   count={item?.count}
                   removeAction={this.props.dispatchRemoveItem}
-                  editAction={(id) => console.log("edit_action")}
+                  editAction={() => {
+                    this.props.navigation.navigate("Update", {
+                      idToUpdate: item.id,
+                    });
+                  }}
                 />
               ))
             ) : (

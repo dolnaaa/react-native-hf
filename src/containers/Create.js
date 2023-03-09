@@ -50,6 +50,7 @@ export class Create extends Component {
               shortDescription: this.state.fieldDesc,
               count: this.state.fieldCount,
             });
+            this.props.navigation.navigate("Read");
           }}
         />
       </View>

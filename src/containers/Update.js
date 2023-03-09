@@ -1,6 +1,9 @@
 import { View, StyleSheet, TextInput, Button } from "react-native";
 import React, { Component } from "react";
 
+import { connect } from "react-redux";
+import { edit_item } from "../actions/listActions";
+
 export class Update extends Component {
   constructor(props) {
     super(props);
@@ -8,7 +11,36 @@ export class Update extends Component {
       fieldName: "",
       fieldDesc: "",
       fieldCount: "",
+
+      focusedListener: null,
     };
+  }
+
+  updateFields() {
+    const { idToUpdate } = this.props.route.params;
+    const { items } = this.props;
+    if (items && idToUpdate && idToUpdate != 0) {
+      const item = items.find((x) => x?.id == idToUpdate);
+      if (item) {
+        this.setState({
+          fieldName: item.name,
+          fieldDesc: item.shortDescription,
+          fieldCount: item.count,
+        });
+      }
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      focusedListener: this.props.navigation.addListener("focus", () => {
+        this.updateFields();
+      }),
+    });
+  }
+
+  componentWillUnmount() {
+    this.state.focusedListener();
   }
 
   render() {
@@ -41,7 +73,14 @@ export class Update extends Component {
         />
         <Button
           title="Update item"
-          onPress={() => console.log("submit")}
+          onPress={() => {
+            this.props.dispatchEditItem(this.props.route.params.idToUpdate, {
+              name: this.state.fieldName,
+              shortDescription: this.state.fieldDesc,
+              count: this.state.fieldCount,
+            });
+            this.props.navigation.navigate("Read");
+          }}
         />
       </View>
     );
@@ -62,4 +101,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Update;
+const mapStateToProps = (state) => ({
+  items: state.listReducer.items,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  dispatchEditItem: (id, edited_data) => dispatch(edit_item(id, edited_data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Update);
